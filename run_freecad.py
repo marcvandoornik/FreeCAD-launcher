@@ -34,20 +34,16 @@ env['PATH'] = config.FREECAD_DIR+'/bin/Scripts'+';'+os.environ['PATH']
 # subprocess.Popen('c:\\marc_portable\\data\\freecad\\freecad_python_launcher_test\\speak.bat', env = env)
 
 env |= os.environ
-arguments = [
-    '-l', 
-    '--set-config', 'ExeName=' + config.EXE_NAME,
-    '--set-config', 'AppIcon=' + config.BRANDING_DIR + '/freecad.ico', 
-    '--set-config', 'SplashScreen=' + config.BRANDING_DIR + '/SplashScreen.png',
-    '--set-config', 'ProgramIcons=' + config.BRANDING_DIR + '/freecad.ico',
-    '--set-config', 'ProgramLogo=' + config.BRANDING_DIR + '/freecad.ico'
-]
 
-print(arguments)
+command = config.FREECAD_DIR+'/bin/freecad.exe'
+command += ' -l'
+command += ' --set-config ExeName=' + '"' + config.EXE_NAME + '"'
+command += ' --set-config AppIcon=' + cwd + '/' + config.BRANDING_DIR + '/freecad.ico'
+command += ' --set-config SplashScreen=' + cwd + '/' + config.BRANDING_DIR + '/SplashScreen.png'
+command += ' --set-config ProgramIcons=' + cwd + '/' + config.BRANDING_DIR + '/freecad.ico'
+command += ' --set-config ProgramLogo=' + cwd + '/' + config.BRANDING_DIR + '/freecad.ico'
 
-# subprocess.run([config.FREECAD_DIR+'/bin/freecad.exe', '--set-config', 'ExeName=Greatest Goat Cheese Of All Time', '--set-config', 'ExeVersion=1.2.3'], env = env)
-
-subprocess.run([config.FREECAD_DIR+'/bin/freecad.exe'] + arguments, env = env)
+subprocess.run(command, env = env)
 
 
 
