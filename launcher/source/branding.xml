@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Branding>
+    <Application>FreeCAD Branding.xml</Application>
+    <WindowTitle>FreeCAD No-Install</WindowTitle>
+    <BuildVersionMajor>1</BuildVersionMajor>
+    <BuildVersionMinor>0</BuildVersionMinor>
+    <BuildRevision>1</BuildRevision>
+    <BuildRevisionDate>2026/02/13</BuildRevisionDate>
+    <CopyrightInfo></CopyrightInfo>
+    <MaintainerUrl></MaintainerUrl>
+    <ProgramLogo>branding/fc_icon.png</ProgramLogo>
+    <WindowIcon>branding/fc_icon.png</WindowIcon>
+    <ProgramIcons>branding/fc_icon.png</ProgramIcons>
+    <SplashScreen>branding/fc_splash.png</SplashScreen>
+    <SplashTextColor>#1d65af</SplashTextColor>
+    <SplashInfoColor>#1d65af</SplashInfoColor>
+    <StartWorkbench>PartDesignWorkbench</StartWorkbench>
+</Branding>
