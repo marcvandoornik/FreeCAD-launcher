@@ -15,6 +15,8 @@ PYTHONPATH        = 'python'
 
 # Additional packages to install via Git
 ADDONS = [
+# My personal preference packs
+'https://github.com/marcvandoornik/FreeCAD-PreferencePacks',
 # A2plus assembly workbench
 # 'https://github.com/kbwbe/A2plus',
 
