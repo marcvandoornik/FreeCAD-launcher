@@ -1,0 +1,22 @@
+#!/bin/bash
+
+clear
+
+# ============================================================================
+# SET THIS TO THE FREECAD INSTALLATION DIRECTORY
+# ============================================================================
+
+export FREECAD_DIR=c:/marc_portable/bin/freecad
+
+
+# ============================================================================
+# DO NOT CHANGE BELOW THIS LINE
+# ============================================================================
+
+if ! [ -d python ]; then  
+  echo "Local Python does not exist. Creating virtual environment."
+  $FREECAD_DIR/bin/python.exe -m venv ./python
+fi
+
+echo Starting FreeCAD.
+exec ./python/Scripts/python.exe ./run_freecad.py 
