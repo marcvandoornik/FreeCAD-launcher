@@ -7,6 +7,8 @@ import subprocess
 import re
 import time
 import config
+import config_addons
+import config_remove_workbenches
 
 
 # ============================================================================
@@ -22,9 +24,16 @@ def prCyan(s): print("\033[96m {}\033[00m".format(s))
 def prLightGray(s): print("\033[97m {}\033[00m".format(s))
 def prBlack(s): print("\033[90m {}\033[00m".format(s))  # Corrected from 98 to 90 (standard ANSI)
 
-def prLeft(s): print(f'{s:<70}', end='')
-def prRightGreen(s): prGreen(f'{s:<10}')
-def prRightRed(s): prRed(f'{s:<10}')
+def prLeft(s): print(f'{s:<89}', end='')
+def prRightGreen(s): prGreen(f'{s:<11}')
+def prRightRed(s): prRed(f'{s:<11}')
+def prLine(c='-', str=''): global WIDTH; print(f'{str:{c}<{WIDTH}}')
+def prHeader(str, c='='): 
+    global WIDTH
+    print('\n'+f'{"":{c}<{WIDTH}}')
+    print(f'{str: ^{WIDTH}}')
+    print(f'{"":{c}<{WIDTH}}'+'\n')
+
 
 
 # ============================================================================
@@ -32,14 +41,9 @@ def prRightRed(s): prRed(f'{s:<10}')
 # ============================================================================
 
 os.system('clear')
-STR = 'FREECAD PORTABLE PYTHON LAUNCHER'
-BRD = '='
-CHAR = ' '
-WIDTH = 80
-print(f'{BRD:=^{WIDTH}}')
-print(f'{STR:{CHAR}^{WIDTH}}')
-print(f'{BRD:=^{WIDTH}}')
-print()
+WIDTH = 100
+
+prHeader('FREECAD PORTABLE PYTHON LAUNCHER', '=')
 
 
 # ============================================================================
@@ -65,7 +69,7 @@ except:
 # ============================================================================
 
 cwd = os.path.normpath(os.getcwd()).replace(os.sep, '/')
-FREECAD_DIR = os.path.normpath(os.environ['FREECAD_DIR'])
+FREECAD_DIR = os.path.normpath(os.environ['FREECAD_DIR']).replace(os.sep, '/')
 PYTHONPATH  = config.PYTHONPATH
 
 env =  {'BRANDING_DIR'      : cwd + '/' + config.BRANDING_DIR}
@@ -98,48 +102,53 @@ if not os.path.exists('data'):
     prRightGreen('Done.')
 
     # Upgrade pip
-    print()
-    print('============================================================')
-    print('Upgrading pip...')
-    print('============================================================')
-    print()
+    prHeader('Upgrading pip', '-')
     time.sleep(1)
     subprocess.run(cwd + '/' + PYTHONPATH + '/Scripts/python.exe -m pip install --upgrade pip')
     print()
-    print('============================================================')
     prGreen('Done.')
-    print('============================================================')
-    print()
 
     # Install Netgen and Numpy
-    print('============================================================')
-    print('Installing Netgen and Numpy...')
-    print('============================================================')
-    print()
+    prHeader('Installing Netgen and Numpy...', '-')
     time.sleep(1)
     subprocess.run(cwd + '/' + PYTHONPATH + '/Scripts/pip.exe install ngsolve numpy')
     print()
-    print('============================================================')
     prRightGreen('Done.')
-    print('============================================================')
 else:
     prRightGreen('Found.')
 
-os.chdir('data/Mod')
 
 # Install all addons from config.py
-print('\nChecking for configured addons:')
+prHeader('Customizing FreeCAD', '-')
+print('Checking for configured addons:\n')
 
-for ADDON in config.ADDONS:
+os.chdir('data/Mod')
+
+for ADDON in config_addons.ADDONS:
     DIR = re.search(r'[^/]+$', ADDON).group()
-    prLeft('    Checking addon ' + DIR + '...')
+    prLeft(' * Checking addon ' + DIR + '...')
     if not os.path.exists(DIR):
         prRightRed('Not found.')
-        prLeft('    ... Installing from ' + ADDON + '...')
+        prLeft('  ... Installing from ' + ADDON + '...')
         subprocess.run('git clone ' + ADDON)
         prRightGreen('Done.')
     else:
         prRightGreen('Exists.')
+
+# Move all unwanted workbenches to Mod_removed
+print('\nMoving all undesired workbenches to', FREECAD_DIR+'/Mod_removed...\n')
+
+for WB in config_remove_workbenches.REM_WB:
+    os.makedirs(FREECAD_DIR+'/Mod_Removed', exist_ok=True)
+    src = FREECAD_DIR+'/Mod/'+WB
+    dst = FREECAD_DIR+'/Mod_Removed/'+WB 
+
+    prLeft(' * Removing '+WB+'...')
+    try:
+        os.rename(src, dst)
+        prRightGreen('Done.')
+    except:
+        prRightRed('Not found.')
 
 
 # For now, try to fire up FreeCAD:
